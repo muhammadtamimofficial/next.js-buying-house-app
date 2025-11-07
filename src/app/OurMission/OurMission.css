@@ -1,0 +1,143 @@
+.mission-section {
+    position: relative;
+    background-color: #0f1724;
+    color: #e2e8f0;
+    padding: 100px 6%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    overflow: hidden;
+}
+
+/* 🔹 Animated gradient background */
+.animated-bg {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 200%;
+    height: 200%;
+    background: radial-gradient(circle at 20% 20%, #00aaff20, transparent 60%),
+        radial-gradient(circle at 80% 80%, #0077ff25, transparent 60%),
+        radial-gradient(circle at 50% 50%, #00e0ff15, transparent 60%);
+    background-size: 200% 200%;
+    animation: floatBG 3s ease-in-out infinite alternate;
+    z-index: 0;
+}
+
+@keyframes floatBG {
+    0% {
+        transform: translate(0%, 0%) scale(1);
+    }
+
+    50% {
+        transform: translate(-5%, -5%) scale(1.1);
+    }
+
+    100% {
+        transform: translate(5%, 5%) scale(1);
+    }
+}
+
+.mission-container {
+    display: flex;
+    flex-wrap: wrap;
+    max-width: 1200px;
+    align-items: center;
+    gap: 50px;
+    position: relative;
+    z-index: 1;
+}
+
+/* 🔹 Text Section */
+.mission-text {
+    flex: 1 1 500px;
+}
+
+.mission-text h1 {
+    font-size: 2.8rem;
+    margin-bottom: 25px;
+    color: #ffffff;
+    position: relative;
+}
+
+.mission-text h1::after {
+    content: "";
+    display: block;
+    width: 60px;
+    height: 4px;
+    background: #00b4d8;
+    margin-top: 10px;
+    border-radius: 2px;
+}
+
+.mission-text p {
+    font-size: 1.1rem;
+    line-height: 1.7;
+    margin-bottom: 20px;
+    color: #cbd5e1;
+}
+
+/* 🔹 Image Section */
+.mission-image {
+    flex: 1 1 450px;
+    text-align: center;
+}
+
+.mission-image img {
+    width: 100%;
+    max-width: 500px;
+    border-radius: 18px;
+    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.4);
+    transition: transform 0.5s ease, box-shadow 0.5s ease;
+}
+
+.mission-image img:hover {
+    transform: scale(1.03);
+    box-shadow: 0 15px 60px rgba(0, 0, 0, 0.6);
+}
+
+/* 🔹 Fade-in Animation */
+.fade-in {
+    opacity: 0;
+    transform: translateY(40px);
+    transition: all 1s ease;
+}
+
+.fade-in.visible {
+    opacity: 1;
+    transform: translateY(0);
+}
+
+/* 🔹 Responsive Design */
+@media (max-width: 1024px) {
+    .mission-container {
+        flex-direction: column;
+        text-align: center;
+    }
+
+    .mission-text h1::after {
+        margin: 10px auto;
+    }
+
+    .mission-text p {
+        font-size: 1rem;
+    }
+
+    .mission-image img {
+        max-width: 90%;
+    }
+}
+
+@media (max-width: 600px) {
+    .mission-section {
+        padding: 70px 5%;
+    }
+
+    .mission-text h1 {
+        font-size: 2rem;
+    }
+
+    .mission-text p {
+        font-size: 0.95rem;
+    }
+}

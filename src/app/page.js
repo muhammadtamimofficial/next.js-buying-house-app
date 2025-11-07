@@ -6,6 +6,7 @@ import Overview from './Overview/Overview';
 import FAQ from './FAQ/FAQ';
 import Contact from './Contact/Contact';
 import ProductCategory from './ProductCategory/ProductCategory';
+import OurMission from './OurMission/OurMission';
 
 const page = () => {
   return (
@@ -14,6 +15,7 @@ const page = () => {
       <Slider></Slider>
       <Overview></Overview>
       <ProductCategory></ProductCategory>
+      <OurMission></OurMission>
       <FAQ></FAQ>
       <Contact></Contact>
     </div>

@@ -1,0 +1,227 @@
+@import url('https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css');
+
+.contact-body {
+    margin: 0;
+    font-family: 'Poppins', sans-serif;
+    background: #0f1724;
+    color: #e6edf5;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+    perspective: 1500px;
+}
+
+/* Card */
+.contact-card {
+    width: 100%;
+    max-width: 1000px;
+    display: grid;
+    grid-template-columns: 50% 50%;
+    background: #121b2a;
+    border-radius: 25px;
+    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.6);
+    overflow: hidden;
+    transform-style: preserve-3d;
+    transform: rotateY(0deg) rotateX(0deg);
+    transition: transform 0.2s ease-out, box-shadow 0.4s ease;
+}
+
+.contact-card:hover {
+    box-shadow: 0 40px 80px rgba(0, 0, 0, 0.7);
+}
+
+/* Left */
+.contact-left {
+    padding: 40px 30px;
+    background: #1b2435;
+    transform: translateZ(30px);
+}
+
+.contact-left h1 {
+    font-size: 2rem;
+    margin-bottom: 10px;
+    color: #00a8e8;
+}
+
+.contact-left p {
+    font-size: 1rem;
+    margin-bottom: 25px;
+    color: #9fb0c0;
+}
+
+.contact-form {
+    display: flex;
+    flex-direction: column;
+    gap: 24px;
+    margin-top: 10px;
+}
+
+.input-group {
+    position: relative;
+}
+
+.input-group input,
+.input-group textarea {
+    width: 100%;
+    padding: 14px 10px;
+    border-radius: 10px;
+    border: 1px solid #2d3a4d;
+    background: #0f1724;
+    color: #e6edf5;
+    font-size: 1rem;
+    transition: all 0.3s ease;
+}
+
+.input-group input:focus,
+.input-group textarea:focus {
+    border-color: #00a8e8;
+    box-shadow: 0 0 12px rgba(0, 168, 232, 0.4);
+    outline: none;
+}
+
+.input-group label {
+    position: absolute;
+    top: 50%;
+    left: 16px;
+    transform: translateY(-50%);
+    color: #7b8794;
+    font-size: 0.95rem;
+    pointer-events: none;
+    transition: all 0.3s ease;
+}
+
+.input-group input:focus+label,
+.input-group input:not(:placeholder-shown)+label,
+.input-group textarea:focus+label,
+.input-group textarea:not(:placeholder-shown)+label {
+    top: -10px;
+    font-size: 0.8rem;
+    color: #00a8e8;
+    background: #1b2435;
+    padding: 0 6px;
+}
+
+.contact-form button {
+    padding: 14px;
+    border: none;
+    border-radius: 10px;
+    font-size: 1rem;
+    font-weight: 600;
+    color: #fff;
+    background: linear-gradient(135deg, #0077b5, #00a8e8);
+    cursor: pointer;
+    box-shadow: 0 10px 25px rgba(0, 168, 232, 0.3);
+    transition: all 0.3s ease;
+}
+
+.contact-form button:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 15px 35px rgba(0, 168, 232, 0.5);
+}
+
+/* Right */
+.contact-right {
+    background: linear-gradient(135deg, #0077b5, #00a8e8);
+    padding: 30px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    color: #fff;
+    transform: translateZ(25px);
+}
+
+.overlay-info {
+    margin-bottom: 20px;
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+.info-item {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+}
+
+.info-icon {
+    background-color: rgba(255, 255, 255, 0.15);
+    border-radius: 50%;
+    width: 50px;
+    height: 50px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.3s ease;
+}
+
+.info-icon:hover {
+    background-color: #ffffff;
+    transform: scale(1.15);
+    box-shadow: 0 0 20px rgba(255, 255, 255, 0.6);
+}
+
+.info-icon i {
+    font-size: 22px;
+    color: #fff;
+    transition: all 0.3s ease;
+}
+
+.info-icon:hover i {
+    color: #0077b5;
+    transform: scale(1.2);
+}
+
+.info-text h3 {
+    margin: 0;
+    font-size: 1rem;
+    color: #d4f0ff;
+}
+
+.info-text p {
+    margin: 5px 0 0 0;
+    color: #ffffff;
+    font-size: 0.95rem;
+}
+
+.googleLocation iframe {
+    border-radius: 15px;
+    width: 100%;
+    height: 350px;
+    border: 0;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.25);
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+    .contact-card {
+        grid-template-columns: 1fr;
+    }
+
+    .googleLocation iframe {
+        height: 250px;
+    }
+}
+
+@media (max-width: 480px) {
+    .contact-left h1 {
+        font-size: 1.6rem;
+    }
+
+    .contact-form button {
+        font-size: 0.95rem;
+    }
+
+    .info-icon {
+        width: 45px;
+        height: 45px;
+    }
+
+    .info-icon i {
+        font-size: 20px;
+    }
+
+    .googleLocation iframe {
+        height: 200px;
+    }
+}

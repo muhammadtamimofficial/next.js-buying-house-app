@@ -4,239 +4,239 @@ import { useState, useRef, useEffect, useLayoutEffect } from 'react';
 import Head from 'next/head';
 
 export default function Home() {
-    const [activeIndex, setActiveIndex] = useState(0);
-    const [menuOpen, setMenuOpen] = useState(false);
-    const navRef = useRef(null);
-    const indicatorRef = useRef(null);
-    const itemsRef = useRef([]);
-    const signupRef = useRef(null);
+  const [activeIndex, setActiveIndex] = useState(0);
+  const [menuOpen, setMenuOpen] = useState(false);
+  const navRef = useRef(null);
+  const indicatorRef = useRef(null);
+  const itemsRef = useRef([]);
+  const signupRef = useRef(null);
 
-    // place indicator under an element
-    const placeIndicator = (el) => {
-        if (!el || !indicatorRef.current || !navRef.current) return;
-        const rect = el.getBoundingClientRect();
-        const parentRect = navRef.current.getBoundingClientRect();
-        const left = rect.left - parentRect.left + 8;
-        const width = Math.max(48, rect.width - 16);
-        indicatorRef.current.style.left = `${left}px`;
-        indicatorRef.current.style.width = `${width}px`;
+  // place indicator under an element
+  const placeIndicator = (el) => {
+    if (!el || !indicatorRef.current || !navRef.current) return;
+    const rect = el.getBoundingClientRect();
+    const parentRect = navRef.current.getBoundingClientRect();
+    const left = rect.left - parentRect.left + 8;
+    const width = Math.max(48, rect.width - 16);
+    indicatorRef.current.style.left = `${left}px`;
+    indicatorRef.current.style.width = `${width}px`;
+  };
+
+  // initial placement after render
+  useLayoutEffect(() => {
+    const active = itemsRef.current[activeIndex];
+    if (active) placeIndicator(active);
+    // ensure reposition on font/load reflows
+    const t = setTimeout(() => {
+      const a = itemsRef.current[activeIndex];
+      if (a) placeIndicator(a);
+    }, 50);
+    return () => clearTimeout(t);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
+  // update when activeIndex changes
+  useEffect(() => {
+    const active = itemsRef.current[activeIndex];
+    if (active) placeIndicator(active);
+  }, [activeIndex]);
+
+  // Resize -> re-place indicator
+  useEffect(() => {
+    const onResize = () => {
+      const active = itemsRef.current[activeIndex];
+      if (active) placeIndicator(active);
     };
+    window.addEventListener('resize', onResize);
+    return () => window.removeEventListener('resize', onResize);
+  }, [activeIndex]);
 
-    // initial placement after render
-    useLayoutEffect(() => {
-        const active = itemsRef.current[activeIndex];
-        if (active) placeIndicator(active);
-        // ensure reposition on font/load reflows
-        const t = setTimeout(() => {
-            const a = itemsRef.current[activeIndex];
-            if (a) placeIndicator(a);
-        }, 50);
-        return () => clearTimeout(t);
-        // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, []);
+  // 3D hover transform and per-item depth translation
+  useEffect(() => {
+    const nav = navRef.current;
+    if (!nav) return;
+    const handleMove = (e) => {
+      const rect = nav.getBoundingClientRect();
+      const x = (e.clientX - rect.left) / rect.width - 0.5;
+      const y = (e.clientY - rect.top) / rect.height - 0.5;
+      const rx = y * 6;
+      const ry = -x * 12;
+      nav.style.transform = `rotateX(${rx}deg) rotateY(${ry}deg)`;
 
-    // update when activeIndex changes
-    useEffect(() => {
-        const active = itemsRef.current[activeIndex];
-        if (active) placeIndicator(active);
-    }, [activeIndex]);
+      const cx = (e.clientX - rect.left) / rect.width;
+      itemsRef.current.forEach((it, i) => {
+        if (!it) return;
+        const depth = 20 + i * 6;
+        const tx = (cx - 0.5) * depth;
+        // use translateZ + translateX for the 3D feel
+        it.style.transform = `translateZ(${60 + i * 6}px) translateX(${tx}px)`;
+      });
 
-    // Resize -> re-place indicator
-    useEffect(() => {
-        const onResize = () => {
-            const active = itemsRef.current[activeIndex];
-            if (active) placeIndicator(active);
-        };
-        window.addEventListener('resize', onResize);
-        return () => window.removeEventListener('resize', onResize);
-    }, [activeIndex]);
-
-    // 3D hover transform and per-item depth translation
-    useEffect(() => {
-        const nav = navRef.current;
-        if (!nav) return;
-        const handleMove = (e) => {
-            const rect = nav.getBoundingClientRect();
-            const x = (e.clientX - rect.left) / rect.width - 0.5;
-            const y = (e.clientY - rect.top) / rect.height - 0.5;
-            const rx = y * 6;
-            const ry = -x * 12;
-            nav.style.transform = `rotateX(${rx}deg) rotateY(${ry}deg)`;
-
-            const cx = (e.clientX - rect.left) / rect.width;
-            itemsRef.current.forEach((it, i) => {
-                if (!it) return;
-                const depth = 20 + i * 6;
-                const tx = (cx - 0.5) * depth;
-                // use translateZ + translateX for the 3D feel
-                it.style.transform = `translateZ(${60 + i * 6}px) translateX(${tx}px)`;
-            });
-
-            const logo = nav.querySelector('.logo');
-            if (logo) logo.style.transform = `translateZ(50px) translateX(${(cx - 0.5) * 18}px)`;
-        };
-        const reset = () => (nav.style.transform = 'rotateX(0) rotateY(0)');
-
-        nav.addEventListener('mousemove', handleMove);
-        nav.addEventListener('mouseleave', reset);
-        return () => {
-            nav.removeEventListener('mousemove', handleMove);
-            nav.removeEventListener('mouseleave', reset);
-        };
-    }, []);
-
-    // keyboard navigation for focused nav items
-    useEffect(() => {
-        const onKey = (e) => {
-            const focused = document.activeElement;
-            const idx = itemsRef.current.findIndex((el) => el === focused);
-            if (idx === -1) return;
-            if (e.key === 'ArrowRight') {
-                const next = Math.min(itemsRef.current.length - 1, idx + 1);
-                itemsRef.current[next].focus();
-                setActiveIndex(next);
-                e.preventDefault();
-            } else if (e.key === 'ArrowLeft') {
-                const prev = Math.max(0, idx - 1);
-                itemsRef.current[prev].focus();
-                setActiveIndex(prev);
-                e.preventDefault();
-            }
-        };
-        document.addEventListener('keydown', onKey);
-        return () => document.removeEventListener('keydown', onKey);
-    }, []);
-
-    // signup animation
-    const handleSignupClick = () => {
-        const el = signupRef.current;
-        if (!el || !el.animate) return;
-        el.animate(
-            [
-                { transform: 'translateZ(30px) scale(1)' },
-                { transform: 'translateZ(36px) scale(0.98)' },
-                { transform: 'translateZ(30px) scale(1)' },
-            ],
-            { duration: 420, easing: 'cubic-bezier(.2,.9,.3,1)' }
-        );
+      const logo = nav.querySelector('.logo');
+      if (logo) logo.style.transform = `translateZ(50px) translateX(${(cx - 0.5) * 18}px)`;
     };
+    const reset = () => (nav.style.transform = 'rotateX(0) rotateY(0)');
 
-    const menuItems = ['Home', 'Features', 'Pricing', 'About', 'Contact'];
+    nav.addEventListener('mousemove', handleMove);
+    nav.addEventListener('mouseleave', reset);
+    return () => {
+      nav.removeEventListener('mousemove', handleMove);
+      nav.removeEventListener('mouseleave', reset);
+    };
+  }, []);
 
-    return (
-        <>
-            <Head>
-                <title>Buying House</title>
-                <link
-                    rel="stylesheet"
-                    href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css"
-                />
-            </Head>
+  // keyboard navigation for focused nav items
+  useEffect(() => {
+    const onKey = (e) => {
+      const focused = document.activeElement;
+      const idx = itemsRef.current.findIndex((el) => el === focused);
+      if (idx === -1) return;
+      if (e.key === 'ArrowRight') {
+        const next = Math.min(itemsRef.current.length - 1, idx + 1);
+        itemsRef.current[next].focus();
+        setActiveIndex(next);
+        e.preventDefault();
+      } else if (e.key === 'ArrowLeft') {
+        const prev = Math.max(0, idx - 1);
+        itemsRef.current[prev].focus();
+        setActiveIndex(prev);
+        e.preventDefault();
+      }
+    };
+    document.addEventListener('keydown', onKey);
+    return () => document.removeEventListener('keydown', onKey);
+  }, []);
 
-            <div className="nav-wrap">
-                <nav className="navbar" id="navbar" aria-label="Primary" ref={navRef}>
-                    <div className="logo" tabIndex={0}>
-                        <div className="mark">3D</div>
-                        <div className="word">Logo</div>
-                    </div>
+  // signup animation
+  const handleSignupClick = () => {
+    const el = signupRef.current;
+    if (!el || !el.animate) return;
+    el.animate(
+      [
+        { transform: 'translateZ(30px) scale(1)' },
+        { transform: 'translateZ(36px) scale(0.98)' },
+        { transform: 'translateZ(30px) scale(1)' },
+      ],
+      { duration: 420, easing: 'cubic-bezier(.2,.9,.3,1)' }
+    );
+  };
 
-                    <ul className={`nav-list ${menuOpen ? 'open' : ''}`} id="navList" role="menubar">
-                        {menuItems.map((label, i) => {
-                            // Features is the dropdown (index 1)
-                            if (i === 1) {
-                                return (
-                                    <li key={label} className="dropdown-parent" role="none">
-                                        <a
-                                            href="#features"
-                                            className="nav-item"
-                                            role="menuitem"
-                                            aria-haspopup="true"
-                                            aria-expanded="false"
-                                            ref={(el) => (itemsRef.current[i] = el)}
-                                            onClick={(e) => {
-                                                e.preventDefault();
-                                                setActiveIndex(i);
-                                            }}
-                                            tabIndex={0}
-                                        >
-                                            {label}
-                                            <i style={{ fontSize: 14, marginLeft: 8 }} className="fa">
-                                                &#xf0d7;
-                                            </i>
-                                        </a>
+  const menuItems = ['Home', 'Features', 'Pricing', 'About', 'Contact'];
 
-                                        <ul className="dropdown" role="menu" aria-label="Features submenu">
-                                            <li role="none">
-                                                <a role="menuitem" href="#feature1">
-                                                    Feature 1
-                                                </a>
-                                            </li>
-                                            <li role="none">
-                                                <a role="menuitem" href="#feature2">
-                                                    Feature 2
-                                                </a>
-                                            </li>
-                                            <li role="none">
-                                                <a role="menuitem" href="#feature3">
-                                                    Feature 3
-                                                </a>
-                                            </li>
-                                        </ul>
-                                    </li>
-                                );
-                            }
+  return (
+    <>
+      <Head>
+        <title>Buying House</title>
+        <link
+          rel="stylesheet"
+          href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css"
+        />
+      </Head>
 
-                            return (
-                                <li key={label} role="none">
-                                    <a
-                                        href={`#${label.toLowerCase()}`}
-                                        className="nav-item"
-                                        role="menuitem"
-                                        ref={(el) => (itemsRef.current[i] = el)}
-                                        onClick={(e) => {
-                                            e.preventDefault();
-                                            setActiveIndex(i);
-                                            setMenuOpen(false);
-                                        }}
-                                        tabIndex={0}
-                                    >
-                                        {label}
-                                    </a>
-                                </li>
-                            );
-                        })}
-                    </ul>
+      <div className="nav-wrap">
+        <nav className="navbar" id="navbar" aria-label="Primary" ref={navRef}>
+          <div className="logo" tabIndex={0}>
+            <div className="mark">3D</div>
+            <div className="word">Logo</div>
+          </div>
 
-                    <div className="cta">
-                        <button
-                            className="btn"
-                            id="signupBtn"
-                            ref={signupRef}
-                            aria-label="Sign up"
-                            onClick={handleSignupClick}
-                        >
-                            <span className="dot" />
-                            <span>Sign up</span>
-                        </button>
-                    </div>
-
-                    <button
-                        className="hamburger"
-                        id="menuBtn"
-                        aria-expanded={menuOpen}
-                        aria-controls="navList"
-                        aria-label="Toggle menu"
-                        onClick={() => setMenuOpen((s) => !s)}
+          <ul className={`nav-list ${menuOpen ? 'open' : ''}`} id="navList" role="menubar">
+            {menuItems.map((label, i) => {
+              // Features is the dropdown (index 1)
+              if (i === 1) {
+                return (
+                  <li key={label} className="dropdown-parent" role="none">
+                    <a
+                      href="#features"
+                      className="nav-item"
+                      role="menuitem"
+                      aria-haspopup="true"
+                      aria-expanded="false"
+                      ref={(el) => (itemsRef.current[i] = el)}
+                      onClick={(e) => {
+                        e.preventDefault();
+                        setActiveIndex(i);
+                      }}
+                      tabIndex={0}
                     >
-                        <span className="bars" />
-                    </button>
+                      {label}
+                      <i style={{ fontSize: 14, marginLeft: 8 }} className="fa">
+                        &#xf0d7;
+                      </i>
+                    </a>
 
-                    <div className="indicator" id="indicator" ref={indicatorRef} aria-hidden="true" />
-                    <div className="nav-shadow" aria-hidden="true" />
-                </nav>
-            </div>
+                    <ul className="dropdown" role="menu" aria-label="Features submenu">
+                      <li role="none">
+                        <a role="menuitem" href="#feature1">
+                          Feature 1
+                        </a>
+                      </li>
+                      <li role="none">
+                        <a role="menuitem" href="#feature2">
+                          Feature 2
+                        </a>
+                      </li>
+                      <li role="none">
+                        <a role="menuitem" href="#feature3">
+                          Feature 3
+                        </a>
+                      </li>
+                    </ul>
+                  </li>
+                );
+              }
 
-            <style jsx global>{`
+              return (
+                <li key={label} role="none">
+                  <a
+                    href={`#${label.toLowerCase()}`}
+                    className="nav-item"
+                    role="menuitem"
+                    ref={(el) => (itemsRef.current[i] = el)}
+                    onClick={(e) => {
+                      e.preventDefault();
+                      setActiveIndex(i);
+                      setMenuOpen(false);
+                    }}
+                    tabIndex={0}
+                  >
+                    {label}
+                  </a>
+                </li>
+              );
+            })}
+          </ul>
+
+          <div className="cta">
+            <button
+              className="btn"
+              id="signupBtn"
+              ref={signupRef}
+              aria-label="Sign up"
+              onClick={handleSignupClick}
+            >
+              <span className="dot" />
+              <span>Sign up</span>
+            </button>
+          </div>
+
+          <button
+            className="hamburger"
+            id="menuBtn"
+            aria-expanded={menuOpen}
+            aria-controls="navList"
+            aria-label="Toggle menu"
+            onClick={() => setMenuOpen((s) => !s)}
+          >
+            <span className="bars" />
+          </button>
+
+          <div className="indicator" id="indicator" ref={indicatorRef} aria-hidden="true" />
+          <div className="nav-shadow" aria-hidden="true" />
+        </nav>
+      </div>
+
+      <style jsx global>{`
         :root {
           --bg: #0f1724;
           --card: #0b1220;
@@ -529,6 +529,6 @@ export default function Home() {
           }
         }
       `}</style>
-        </>
-    );
+    </>
+  );
 }

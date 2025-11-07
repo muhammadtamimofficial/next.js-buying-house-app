@@ -272,7 +272,7 @@ export default function Home() {
 
         .nav-wrap {
           width: 100%;
-          max-width: 1100px;
+          max-width: 100%;
           perspective: 1200px;
         }
 

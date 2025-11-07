@@ -20,7 +20,7 @@
         radial-gradient(circle at 80% 80%, #0077ff25, transparent 60%),
         radial-gradient(circle at 50% 50%, #00e0ff15, transparent 60%);
     background-size: 200% 200%;
-    animation: floatBG 3s ease-in-out infinite alternate;
+    animation: floatBG 2s ease-in-out infinite alternate;
     z-index: 0;
 }
 
@@ -131,6 +131,7 @@
 @media (max-width: 600px) {
     .mission-section {
         padding: 70px 5%;
+        max-height: 700px;
     }
 
     .mission-text h1 {
@@ -140,4 +141,6 @@
     .mission-text p {
         font-size: 0.95rem;
     }
+
+
 }

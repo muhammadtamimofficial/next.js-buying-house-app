@@ -5,6 +5,7 @@ import Slider from './Slider/Slider';
 import Overview from './Overview/Overview';
 import FAQ from './FAQ/FAQ';
 import Contact from './Contact/Contact';
+import ProductCategory from './ProductCategory/ProductCategory';
 
 const page = () => {
   return (
@@ -12,6 +13,7 @@ const page = () => {
       <Nav></Nav>
       <Slider></Slider>
       <Overview></Overview>
+      <ProductCategory></ProductCategory>
       <FAQ></FAQ>
       <Contact></Contact>
     </div>

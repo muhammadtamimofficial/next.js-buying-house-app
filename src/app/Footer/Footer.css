@@ -115,6 +115,10 @@
     margin-top: 20px;
 }
 
+.developer:hover {
+    color: #ef6161;
+}
+
 /* Responsive */
 @media (max-width: 1024px) {
     .footer-container {

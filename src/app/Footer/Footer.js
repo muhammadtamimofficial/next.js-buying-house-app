@@ -46,7 +46,9 @@ export default function Footer() {
             </div>
 
             <div className="footer-bottom">
-                <p>&copy; {2025} Muhammad Tamim. All rights reserved.</p>
+                <a className='developer' href="https://www.linkedin.com/in/muhammadtamimofficial" target="_blank" rel="noopener noreferrer">
+                    <p>&copy; {2025} Muhammad Tamim. All rights reserved.</p>
+                </a>
             </div>
         </footer>
     );

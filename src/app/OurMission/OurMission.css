@@ -130,17 +130,7 @@
 
 @media (max-width: 600px) {
     .mission-section {
-        padding: 70px 5%;
-        max-height: 700px;
+        padding-top: 100%;
+        max-height: 1000px;
     }
-
-    .mission-text h1 {
-        font-size: 2rem;
-    }
-
-    .mission-text p {
-        font-size: 0.95rem;
-    }
-
-
 }

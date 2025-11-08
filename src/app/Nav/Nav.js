@@ -6,10 +6,12 @@ import Head from 'next/head';
 export default function Home() {
   const [activeIndex, setActiveIndex] = useState(0);
   const [menuOpen, setMenuOpen] = useState(false);
+  const [dropdownOpen, setDropdownOpen] = useState(false);
   const navRef = useRef(null);
   const indicatorRef = useRef(null);
   const itemsRef = useRef([]);
   const signupRef = useRef(null);
+  const dropdownRef = useRef(null);
 
   // place indicator under an element
   const placeIndicator = (el) => {
@@ -32,8 +34,7 @@ export default function Home() {
       if (a) placeIndicator(a);
     }, 50);
     return () => clearTimeout(t);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+  }, [activeIndex]);
 
   // update when activeIndex changes
   useEffect(() => {
@@ -51,10 +52,25 @@ export default function Home() {
     return () => window.removeEventListener('resize', onResize);
   }, [activeIndex]);
 
+  // Close dropdown when clicking outside
+  useEffect(() => {
+    const handleClickOutside = (event) => {
+      if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
+        setDropdownOpen(false);
+      }
+    };
+
+    document.addEventListener('mousedown', handleClickOutside);
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutside);
+    };
+  }, []);
+
   // 3D hover transform and per-item depth translation
   useEffect(() => {
     const nav = navRef.current;
     if (!nav) return;
+
     const handleMove = (e) => {
       const rect = nav.getBoundingClientRect();
       const x = (e.clientX - rect.left) / rect.width - 0.5;
@@ -75,7 +91,16 @@ export default function Home() {
       const logo = nav.querySelector('.logo');
       if (logo) logo.style.transform = `translateZ(50px) translateX(${(cx - 0.5) * 18}px)`;
     };
-    const reset = () => (nav.style.transform = 'rotateX(0) rotateY(0)');
+
+    const reset = () => {
+      nav.style.transform = 'rotateX(0) rotateY(0)';
+      itemsRef.current.forEach((it, i) => {
+        if (!it) return;
+        it.style.transform = `translateZ(${60 + i * 6}px) translateX(0px)`;
+      });
+      const logo = nav.querySelector('.logo');
+      if (logo) logo.style.transform = `translateZ(50px) translateX(0px)`;
+    };
 
     nav.addEventListener('mousemove', handleMove);
     nav.addEventListener('mouseleave', reset);
@@ -93,12 +118,12 @@ export default function Home() {
       if (idx === -1) return;
       if (e.key === 'ArrowRight') {
         const next = Math.min(itemsRef.current.length - 1, idx + 1);
-        itemsRef.current[next].focus();
+        itemsRef.current[next]?.focus();
         setActiveIndex(next);
         e.preventDefault();
       } else if (e.key === 'ArrowLeft') {
         const prev = Math.max(0, idx - 1);
-        itemsRef.current[prev].focus();
+        itemsRef.current[prev]?.focus();
         setActiveIndex(prev);
         e.preventDefault();
       }
@@ -119,6 +144,12 @@ export default function Home() {
       ],
       { duration: 420, easing: 'cubic-bezier(.2,.9,.3,1)' }
     );
+  };
+
+  const toggleDropdown = (e) => {
+    e.preventDefault();
+    setDropdownOpen(!dropdownOpen);
+    setActiveIndex(1);
   };
 
   const menuItems = ['Home', 'Features', 'Pricing', 'About', 'Contact'];
@@ -145,17 +176,20 @@ export default function Home() {
               // Features is the dropdown (index 1)
               if (i === 1) {
                 return (
-                  <li key={label} className="dropdown-parent" role="none">
+                  <li key={label} className="dropdown-parent" role="none" ref={dropdownRef}>
                     <a
                       href="#features"
                       className="nav-item"
                       role="menuitem"
                       aria-haspopup="true"
-                      aria-expanded="false"
+                      aria-expanded={dropdownOpen}
                       ref={(el) => (itemsRef.current[i] = el)}
-                      onClick={(e) => {
-                        e.preventDefault();
-                        setActiveIndex(i);
+                      onClick={toggleDropdown}
+                      onKeyDown={(e) => {
+                        if (e.key === 'Enter' || e.key === ' ') {
+                          e.preventDefault();
+                          toggleDropdown(e);
+                        }
                       }}
                       tabIndex={0}
                     >
@@ -165,19 +199,19 @@ export default function Home() {
                       </i>
                     </a>
 
-                    <ul className="dropdown" role="menu" aria-label="Features submenu">
+                    <ul className={`dropdown ${dropdownOpen ? 'open' : ''}`} role="menu" aria-label="Features submenu">
                       <li role="none">
-                        <a role="menuitem" href="#feature1">
+                        <a role="menuitem" href="#feature1" onClick={() => setDropdownOpen(false)}>
                           Feature 1
                         </a>
                       </li>
                       <li role="none">
-                        <a role="menuitem" href="#feature2">
+                        <a role="menuitem" href="#feature2" onClick={() => setDropdownOpen(false)}>
                           Feature 2
                         </a>
                       </li>
                       <li role="none">
-                        <a role="menuitem" href="#feature3">
+                        <a role="menuitem" href="#feature3" onClick={() => setDropdownOpen(false)}>
                           Feature 3
                         </a>
                       </li>
@@ -197,6 +231,15 @@ export default function Home() {
                       e.preventDefault();
                       setActiveIndex(i);
                       setMenuOpen(false);
+                      setDropdownOpen(false);
+                    }}
+                    onKeyDown={(e) => {
+                      if (e.key === 'Enter' || e.key === ' ') {
+                        e.preventDefault();
+                        setActiveIndex(i);
+                        setMenuOpen(false);
+                        setDropdownOpen(false);
+                      }
                     }}
                     tabIndex={0}
                   >
@@ -226,7 +269,10 @@ export default function Home() {
             aria-expanded={menuOpen}
             aria-controls="navList"
             aria-label="Toggle menu"
-            onClick={() => setMenuOpen((s) => !s)}
+            onClick={() => {
+              setMenuOpen((s) => !s);
+              setDropdownOpen(false);
+            }}
           >
             <span className="bars" />
           </button>
@@ -268,12 +314,20 @@ export default function Home() {
           justify-content: center;
           gap: 24px;
           min-height: 100vh;
+          padding-top: calc(var(--nav-height) + 60px); /* Added padding for fixed nav */
         }
 
         .nav-wrap {
           width: 100%;
           max-width: 100%;
           perspective: 1200px;
+          position: fixed; /* Made fixed */
+          top: 20px; /* Position from top */
+          left: 50%;
+          transform: translateX(-50%);
+          z-index: 1000; /* High z-index to stay on top */
+          padding: 0 40px;
+          box-sizing: border-box;
         }
 
         nav.navbar {
@@ -290,6 +344,8 @@ export default function Home() {
           transition: box-shadow 0.25s ease, transform 0.25s ease;
           overflow: visible;
           backdrop-filter: blur(6px) saturate(1.1);
+          max-width: 1200px;
+          margin: 0 auto;
         }
 
         /* Logo */
@@ -299,6 +355,8 @@ export default function Home() {
           gap: 12px;
           margin-right: 6px;
           transform: translateZ(40px) scale(.98);
+          transition: transform 0.25s ease;
+          cursor: pointer;
         }
 
         .logo .mark {
@@ -351,6 +409,7 @@ export default function Home() {
           transition: transform .22s cubic-bezier(.2, .9, .3, 1), color .18s ease;
           transform: translateZ(30px);
           -webkit-tap-highlight-color: transparent;
+          outline: none;
         }
 
         .nav-item:focus {
@@ -378,8 +437,14 @@ export default function Home() {
           display: none;
           flex-direction: column;
           min-width: 160px;
-          z-index: 10;
+          z-index: 1001; /* Higher z-index */
           box-shadow: 0 8px 24px rgba(2, 6, 23, 0.6);
+          backdrop-filter: blur(6px) saturate(1.1);
+          margin-top: 8px; /* Added space from parent */
+        }
+
+        .dropdown.open {
+          display: flex !important; /* Force display when open */
         }
 
         .dropdown a {
@@ -388,6 +453,12 @@ export default function Home() {
           text-decoration: none;
           font-size: 14px;
           display: block;
+          transition: background 0.2s ease, color 0.2s ease;
+          border: none;
+          background: none;
+          width: 100%;
+          text-align: left;
+          cursor: pointer;
         }
 
         .dropdown a:hover {
@@ -395,8 +466,8 @@ export default function Home() {
           color: #fff;
         }
 
-        .dropdown-parent:hover > .dropdown,
-        .dropdown-parent:focus-within > .dropdown {
+        .dropdown-parent:hover > .dropdown:not(.open),
+        .dropdown-parent:focus-within > .dropdown:not(.open) {
           display: flex;
         }
 
@@ -445,6 +516,9 @@ export default function Home() {
           font-weight: 700;
           transform: translateZ(30px);
           transition: transform 0.2s ease, background 0.2s ease;
+          color: inherit;
+          font-family: inherit;
+          outline: none;
         }
 
         #signupBtn span:last-child {
@@ -471,6 +545,8 @@ export default function Home() {
           background: none;
           padding: 8px;
           border-radius: 10px;
+          cursor: pointer;
+          outline: none;
         }
 
         .hamburger .bars {
@@ -480,6 +556,7 @@ export default function Home() {
           border-radius: 2px;
           position: relative;
           display: block;
+          transition: transform 0.3s ease;
         }
 
         .hamburger .bars::before,
@@ -491,6 +568,7 @@ export default function Home() {
           height: 2px;
           background: #cfe8ff;
           border-radius: 2px;
+          transition: transform 0.3s ease, top 0.3s ease;
         }
 
         .hamburger .bars::before {
@@ -502,6 +580,16 @@ export default function Home() {
         }
 
         @media (max-width:820px) {
+          body {
+            padding: 20px;
+            padding-top: calc(var(--nav-height) + 40px); /* Adjusted for mobile */
+          }
+
+          .nav-wrap {
+            padding: 0 20px;
+            top: 20px;
+          }
+
           .nav-list {
             display: none;
             position: absolute;
@@ -513,10 +601,29 @@ export default function Home() {
             border-radius: 14px;
             flex-direction: column;
             gap: 8px;
+            z-index: 1000;
+            backdrop-filter: blur(6px) saturate(1.1);
           }
 
           .nav-list.open {
             display: flex;
+          }
+
+          .dropdown {
+            position: static;
+            display: none;
+            width: 100%;
+            margin-top: 8px;
+            margin-left: 0;
+          }
+
+          .dropdown.open {
+            display: flex !important;
+          }
+
+          .dropdown-parent:hover > .dropdown,
+          .dropdown-parent:focus-within > .dropdown {
+            display: none;
           }
 
           .hamburger {
@@ -525,6 +632,10 @@ export default function Home() {
           }
 
           .cta {
+            display: none;
+          }
+
+          .indicator {
             display: none;
           }
         }

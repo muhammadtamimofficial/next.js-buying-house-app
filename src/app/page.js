@@ -13,13 +13,13 @@ const page = () => {
   return (
     <div>
       <Nav></Nav>
-      <Slider></Slider>
-      <Overview></Overview>
+      {/* <Slider></Slider> */}
+      {/* <Overview></Overview>
       <ProductCategory></ProductCategory>
       <OurMission></OurMission>
       <FAQ></FAQ>
       <Contact></Contact>
-      <Footer></Footer>
+      <Footer></Footer> */}
     </div>
 
   );

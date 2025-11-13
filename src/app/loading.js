@@ -1,4 +1,5 @@
 'use client'; import React, { useState, useEffect } from 'react';
+import Slider from './Slider/Slider';
 
 // This component is designed to be placed in a 'loading.js' or 'loading.jsx' file
 // within any Next.js App Router segment (e.g., app/dashboard/loading.jsx).

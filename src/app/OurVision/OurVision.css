@@ -122,7 +122,10 @@
     }
 
     .vision-image img {
-        max-width: 90%;
+    max-width: 90%;
+    display: block;         /* Makes the image a block-level element */
+    margin-left: auto;      /* Automatically sets the left margin */
+    margin-right: auto; 
     }
 }
 

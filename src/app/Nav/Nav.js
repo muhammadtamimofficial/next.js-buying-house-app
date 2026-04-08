@@ -10,6 +10,7 @@ import OurMission from '../OurMission/OurMission';
 import FAQ from '../FAQ/FAQ';
 import Contact from '../Contact/Contact';
 import Footer from '../Footer/Footer';
+import OurVision from "../OurVision/OurVision";
 
 export default function Home() {
   const navRef = useRef(null);
@@ -21,6 +22,7 @@ export default function Home() {
     { label: "Product Category", id: "productcategory" },
     { label: "Our Mission", id: "ourmission" },
     { label: "FAQ", id: "faq" },
+    { label: "Our Vision", id: "ourvision" },
     { label: "Contact", id: "contact" },
   ];
 
@@ -107,6 +109,7 @@ export default function Home() {
         <section id="productcategory" className="page-section"><ProductCategory /></section>
         <section id="ourmission" className="page-section"><OurMission /></section>
         <section id="faq" className="page-section"><FAQ /></section>
+        <section id="ourvision" className=""><OurVision></OurVision></section>
         <section id="contact" className="page-section"><Contact /></section>
         <Footer />
       </main>

@@ -5,32 +5,28 @@ import "./ProductCategory.css";
 const ProductCategory = () => {
     const products = [
         {
-            title: "Women Collection",
+            title: "Watch Collection",
             img: "https://images.unsplash.com/photo-1523275335684-37898b6baf30?auto=format&fit=crop&w=500&q=80",
         },
         {
             title: "Men Collection",
-            img: "https://images.unsplash.com/photo-1600180758895-7c6b38b07d48?auto=format&fit=crop&w=500&q=80",
+            img: "https://thumbs.dreamstime.com/b/portrait-handsome-smiling-young-man-folded-arms-smiling-joyful-cheerful-men-crossed-hands-isolated-studio-shot-172869765.jpg",
         },
         {
             title: "Kids Collection",
-            img: "https://images.unsplash.com/photo-1587560699334-6b7f78e03d4d?auto=format&fit=crop&w=500&q=80",
+            img: "https://thumbs.dreamstime.com/b/group-elementary-school-kids-sitting-school-steps-71530399.jpg",
         },
         {
             title: "Shirts",
-            img: "https://images.unsplash.com/photo-1541099649105-f69ad21f3246?auto=format&fit=crop&w=500&q=80",
+            img: "https://thumbs.dreamstime.com/b/senior-men-relaxing-armchairs-9003956.jpg",
         },
         {
             title: "Pants",
-            img: "https://images.unsplash.com/photo-1602810312141-cc3d3fa44e2f?auto=format&fit=crop&w=500&q=80",
+            img: "https://images.unsplash.com/photo-1541099649105-f69ad21f3246?auto=format&fit=crop&w=500&q=80",
         },
         {
-            title: "Women Top",
-            img: "https://images.unsplash.com/photo-1587401048752-8b97cfb0382b?auto=format&fit=crop&w=500&q=80",
-        },
-        {
-            title: "Blazer",
-            img: "https://images.unsplash.com/photo-1526170375885-4d8ecf77b99f?auto=format&fit=crop&w=500&q=80",
+            title: "Women",
+            img: "https://thumbs.dreamstime.com/b/young-woman-working-modern-business-office-student-girl-using-laptop-computer-cafe-young-woman-working-modern-business-198117357.jpg",
         },
     ];
 

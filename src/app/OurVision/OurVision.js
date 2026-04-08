@@ -4,7 +4,8 @@ import "./OurVision.css";
 
 const OurVision = () => {
     useEffect(() => {
-        const elements = document.querySelectorAll(".fade-in");
+        const elements = document.querySelectorAll(".vision-fade-in");
+        
         const observer = new IntersectionObserver(
             (entries) => {
                 entries.forEach((entry) => {
@@ -22,37 +23,44 @@ const OurVision = () => {
     }, []);
 
     return (
-        <section className="mission-section">
+        <section className="vision-section">
             <div className="animated-bg"></div>
 
-            <div className="mission-container fade-in">
-                <div className="mission-image fade-in">
-                   <img
-                        src="https://images.unsplash.com/photo-1504384308090-c894fdcc538d?auto=format&fit=crop&w=1000&q=80"
+            {/* 
+               Container uses default flex-direction (row).
+               Image (Left) -> Text (Right)
+            */}
+            <div className="vision-container fade-in">
+                
+                {/* Image Side (Left) */}
+                <div className="vision-image fade-in">
+                    <img
+                        src="https://images.unsplash.com/photo-1553877522-43269d4ea984?auto=format&fit=crop&w=1000&q=80"
                         alt="Our Vision"
-                    />              
+                    />
                 </div>
 
-                <div className="mission-text">
+                {/* Text Side (Right) */}
+                <div className="vision-text fade-in">
                     <h1>Our Vision</h1>
                     <p>
-                        At <strong>Our CEO</strong>, our vision is to empower businesses and individuals
-                        through innovative digital solutions. We aim to make technology simple, efficient,
-                        and accessible — helping our clients grow, connect, and achieve their goals.
+                        Our vision is to become a global catalyst for digital transformation,
+                        bridging the gap between complex technology and everyday human experiences.
+                        We see a future where innovation knows no boundaries.
                     </p>
                     <p>
-                        We believe in delivering quality with integrity, focusing on long-term relationships,
-                        and building products that truly make an impact. Every line of code, every design, and
-                        every feature we develop is guided by our passion for excellence and commitment to
-                        our users’ success.
+                        We envision a world where every business, regardless of size, has access to
+                        cutting-edge tools that drive efficiency and creativity. By fostering a culture
+                        of continuous learning and adaptation, we aim to lead the charge in shaping
+                        a smarter, more connected tomorrow.
                     </p>
                     <p>
-                        Our vision extends beyond business — we strive to contribute positively to our
-                        community, promoting sustainability, transparency, and continuous innovation.
+                        Sustainability and ethical technology are at the core of our long-term goals.
+                        We strive to build a digital ecosystem that is inclusive, secure, and
+                        environmentally conscious.
                     </p>
                 </div>
 
-                
             </div>
         </section>
     );

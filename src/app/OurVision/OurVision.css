@@ -1,4 +1,5 @@
-.mission-section {
+/* 🔹 Vision Section Base Styles */
+.vision-section {
     position: relative;
     background-color: #0f1724;
     color: #e2e8f0;
@@ -6,10 +7,10 @@
     display: flex;
     justify-content: center;
     align-items: center;
-    overflow: hidden;
+    overflow: hidden; /* Fixes image overflow issues */
 }
 
-/* 🔹 Animated gradient background */
+/* 🔹 Animated Gradient Background */
 .animated-bg {
     position: absolute;
     top: 0;
@@ -25,20 +26,13 @@
 }
 
 @keyframes floatBG {
-    0% {
-        transform: translate(0%, 0%) scale(1);
-    }
-
-    50% {
-        transform: translate(-5%, -5%) scale(1.1);
-    }
-
-    100% {
-        transform: translate(5%, 5%) scale(1);
-    }
+    0% { transform: translate(0%, 0%) scale(1); }
+    50% { transform: translate(-5%, -5%) scale(1.1); }
+    100% { transform: translate(5%, 5%) scale(1); }
 }
 
-.mission-container {
+/* 🔹 Container & Layout */
+.vision-container {
     display: flex;
     flex-wrap: wrap;
     max-width: 1200px;
@@ -46,21 +40,22 @@
     gap: 50px;
     position: relative;
     z-index: 1;
+    /* Default flex-direction is row, so Image is Left, Text is Right */
 }
 
 /* 🔹 Text Section */
-.mission-text {
+.vision-text {
     flex: 1 1 500px;
 }
 
-.mission-text h1 {
+.vision-text h1 {
     font-size: 2.8rem;
     margin-bottom: 25px;
     color: #ffffff;
     position: relative;
 }
 
-.mission-text h1::after {
+.vision-text h1::after {
     content: "";
     display: block;
     width: 60px;
@@ -70,67 +65,70 @@
     border-radius: 2px;
 }
 
-.mission-text p {
+.vision-text p {
     font-size: 1.1rem;
     line-height: 1.7;
     margin-bottom: 20px;
     color: #cbd5e1;
 }
 
-/* 🔹 Image Section */
-.mission-image {
+/* 🔹 Image Section (Fixed Overflow) */
+.vision-image {
     flex: 1 1 450px;
     text-align: center;
+    overflow: hidden; /* Ensures image corners are clipped */
+    border-radius: 18px; /* Matches image radius */
 }
 
-.mission-image img {
+.vision-image img {
     width: 100%;
-    max-width: 500px;
+    max-width: 100%; /* Prevents breaking container */
+    display: block; /* Removes extra spacing below image */
     border-radius: 18px;
     box-shadow: 0 10px 40px rgba(0, 0, 0, 0.4);
     transition: transform 0.5s ease, box-shadow 0.5s ease;
 }
 
-.mission-image img:hover {
+.vision-image img:hover {
     transform: scale(1.03);
     box-shadow: 0 15px 60px rgba(0, 0, 0, 0.6);
 }
 
 /* 🔹 Fade-in Animation */
-.fade-in {
+.vision-fade-in {
     opacity: 0;
     transform: translateY(40px);
     transition: all 1s ease;
 }
 
-.fade-in.visible {
+.vision-fade-in.visible {
     opacity: 1;
     transform: translateY(0);
 }
 
 /* 🔹 Responsive Design */
 @media (max-width: 1024px) {
-    .mission-container {
-        flex-direction: column;
+    .vision-container {
+        flex-direction: column !important; /* Stack vertically on tablet */
         text-align: center;
     }
 
-    .mission-text h1::after {
-        margin: 10px auto;
+    .vision-text h1::after {
+        margin: 10px auto; /* Center underline on mobile */
     }
 
-    .mission-text p {
+    .vision-text p {
         font-size: 1rem;
     }
 
-    .mission-image img {
+    .vision-image img {
         max-width: 90%;
     }
 }
 
 @media (max-width: 600px) {
-    .mission-section {
-        padding-top: 100%;
-        max-height: 1000px;
+    .vision-section {
+        padding: 80px 5%;
+        max-height: none;
     }
 }

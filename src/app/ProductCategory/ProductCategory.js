@@ -43,6 +43,9 @@ const ProductCategory = () => {
                     ))}
                 </div>
             </div>
+           <button className="see-all-btn">
+                  See All
+            </button>
         </section>
     );
 };

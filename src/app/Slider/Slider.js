@@ -7,13 +7,13 @@ export default function Slider() {
             title: "Experience The Future",
             subtitle: "Immersive 3D visuals that redefine your web experience",
             btn: "Get Started",
-            src: "https://images.unsplash.com/photo-1526778548025-fa2f459cd5c1?auto=format&fit=crop&w=1600&q=80",
+            src: "https://images.unsplash.com/photo-1521737604893-d14cc237f11d",
         },
         {
             title: "Explore the Depths",
             subtitle: "Dive into transparent layers and stunning gradients",
             btn: "Explore",
-            src: "https://images.unsplash.com/photo-1507525428034-b723cf961d3e?auto=format&fit=crop&w=1600&q=80",
+            src: "https://images.unsplash.com/photo-1556761175-4b46a572b786",
         },
         {
             title: "Adventure Beyond",
@@ -53,7 +53,7 @@ export default function Slider() {
                 paddingTop: "50px",
                 height: "100vh",
                 overflow: "visible",
-                background: "#121826",
+                background: "#9093a1",
                 fontFamily: "Poppins, sans-serif",
                 color: "#fff",
             }}
